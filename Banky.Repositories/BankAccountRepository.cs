@@ -32,5 +32,11 @@ namespace Banky.Repositories
             account.Balance += amount;
             return account;
         }
+
+        public async Task<AccountDetail> WithdrawFunds(AccountDetail account, double amount)
+        {
+            account.Balance -= amount;
+            return account;
+        }
     }
 }

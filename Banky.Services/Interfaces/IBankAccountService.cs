@@ -11,5 +11,6 @@ namespace Banky.Services.Interfaces
     public interface IBankAccountService
     {
         Task<IAccountTransactionResult> DepositFunds(AccountDeposit deposit);
+        Task<IAccountTransactionResult> WithdrawFunds(AccountWithdrawal withdrawal);
     }
 }

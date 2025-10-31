@@ -31,10 +31,18 @@ namespace Banky.API.Controllers
             return result.Succeeded ? Ok(result) : BadRequest(result);
         }
 
-        [HttpPost]
-        public async Task<IActionResult> SubmitWithdrawal()
+        [HttpPost("withdraw")]
+        [ProducesResponseType(typeof(AccountWithdrawalResult), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> SubmitWithdrawal([FromBody] AccountWithdrawal withdrawal)
         {
-            return Ok();
+            if (withdrawal == null)
+            {
+                return BadRequest("Missing transaction information");
+            }
+
+            var result = await _accountService.WithdrawFunds(withdrawal);
+            return result.Succeeded ? Ok(result) : BadRequest(result);
         }
 
         [HttpPost]
