@@ -3,11 +3,6 @@ using Banky.Repositories.Models;
 using Banky.Services.Interfaces;
 using Banky.Services.Models;
 using Banky.Shared.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Banky.Services
 {
@@ -44,7 +39,7 @@ namespace Banky.Services
         {
             var accountDetails = await _bankAccountRepository.GetAccountDetails(withdrawal.AccountId, withdrawal.CustomerId).ConfigureAwait(false);
             var success = false;
-            if(accountDetails.CustomerId > 0 && accountDetails.AccountId > 0 && accountDetails.Balance > withdrawal.Amount && withdrawal.Amount > 0)
+            if(accountDetails.CustomerId > 0 && accountDetails.AccountId > 0 && accountDetails.Balance >= withdrawal.Amount && withdrawal.Amount > 0)
             {
                 accountDetails = await _bankAccountRepository.WithdrawFunds(accountDetails, withdrawal.Amount).ConfigureAwait(false);
                 success = true;
