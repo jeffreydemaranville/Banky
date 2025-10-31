@@ -1,4 +1,5 @@
 ﻿using Banky.Repositories.Interfaces;
+using Banky.Repositories.Models;
 using Banky.Services.Interfaces;
 using Banky.Services.Models;
 using Banky.Shared.Interfaces;
@@ -54,6 +55,39 @@ namespace Banky.Services
                 AccountId = success ? accountDetails.AccountId : 0,
                 Balance = success ? accountDetails.Balance : 0,
                 CustomerId = success ? accountDetails.CustomerId : 0,
+                Succeeded = success
+            };
+            return result;
+        }
+
+        public async Task<ICreateAccountResult> CreateAccount(Models.CreateAccount account)
+        {
+            var success = false;
+            var accountDetail = new AccountDetail();
+            var customerDetails = await _bankAccountRepository.GetCustomerDetails(account.CustomerId).ConfigureAwait(false);
+
+            if (customerDetails.CustomerId > 0 && account.InitialDeposit >= 100 && account.AccountTypeId > 0)
+            {
+                var isFirstAccount = customerDetails.CustomerAccounts?.Count() == 0;
+                if (!isFirstAccount || (isFirstAccount && account.AccountTypeId == Shared.Enumerations.AccountTypeEnum.Savings))
+                {
+                    var newAccount = new Repositories.Models.CreateAccount()
+                    {
+                        AccountTypeId = (short)account.AccountTypeId,
+                        CustomerId = account.CustomerId,
+                        InitialDeposit = account.InitialDeposit,
+                    };
+                    accountDetail = await _bankAccountRepository.CreateCustomerAccount(newAccount);
+                    success = true;
+                }
+            }
+
+            var result = new CreateAccountResult()
+            {
+                AccountId = accountDetail.AccountId,
+                AccountTypeId = accountDetail.AccountTypeId,
+                Balance = accountDetail.Balance,
+                CustomerId = accountDetail.CustomerId,
                 Succeeded = success
             };
             return result;

@@ -27,6 +27,17 @@ namespace Banky.Repositories
             return accountDetails;
         }
 
+        public async Task<CustomerDetail> GetCustomerDetails(int customerId)
+        {
+            var customerDetails = _customerDetailModels.Find(x => x.CustomerId == customerId) ?? _noCustomer;
+            var customerAccounts = _accountDetailModels.Where(x => x.CustomerId == customerId);
+            if (customerAccounts != null)
+            {
+                customerDetails.CustomerAccounts = customerAccounts;
+            }
+            return customerDetails;
+        }
+
         public async Task<AccountDetail> DepositFunds(AccountDetail account, double amount)
         {
             account.Balance += amount;
@@ -37,6 +48,20 @@ namespace Banky.Repositories
         {
             account.Balance -= amount;
             return account;
+        }
+
+        public async Task<AccountDetail> CreateCustomerAccount(CreateAccount account)
+        {
+            AccountDetail accountDetail = new AccountDetail()
+            {
+                AccountId = _accountDetailModels.Max(x => x.AccountId + 1000),
+                AccountStatusId = 1,
+                AccountTypeId = account.AccountTypeId,
+                Balance = account.InitialDeposit,
+                CustomerId = account.CustomerId
+            };
+            _accountDetailModels.Add(accountDetail);
+            return accountDetail;
         }
     }
 }

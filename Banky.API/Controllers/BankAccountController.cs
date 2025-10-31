@@ -45,10 +45,18 @@ namespace Banky.API.Controllers
             return result.Succeeded ? Ok(result) : BadRequest(result);
         }
 
-        [HttpPost]
-        public async Task<IActionResult> CreateAccount()
+        [HttpPost("create-account")]
+        [ProducesResponseType(typeof(CreateAccountResult), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> CreateAccount([FromBody] CreateAccount account)
         {
-            return Ok();
+            if (account == null)
+            {
+                return BadRequest("Missing account information");
+            }
+
+            var result = await _accountService.CreateAccount(account);
+            return result.Succeeded ? Ok(result) : BadRequest(result);
         }
 
         [HttpPost]
