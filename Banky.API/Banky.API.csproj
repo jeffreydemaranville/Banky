@@ -12,6 +12,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Banky.Repositories\Banky.Repositories.csproj" />
+    <ProjectReference Include="..\Banky.Services\Banky.Services.csproj" />
   </ItemGroup>
 
 </Project>
