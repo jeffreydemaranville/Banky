@@ -14,5 +14,6 @@ namespace Banky.Repositories.Interfaces
         Task<AccountDetail> DepositFunds(AccountDetail account, double amount);
         Task<AccountDetail> WithdrawFunds(AccountDetail account, double amount);
         Task<AccountDetail> CreateCustomerAccount(CreateAccount account);
+        Task<AccountDetail> CloseCustomerAccount(CloseAccount account);
     }
 }

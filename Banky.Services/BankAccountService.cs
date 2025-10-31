@@ -92,5 +92,31 @@ namespace Banky.Services
             };
             return result;
         }
+
+        public async Task<ICloseAccountResult> CloseAccount(Models.CloseAccount account)
+        {
+            var success = false;
+            var accountDetails = await _bankAccountRepository.GetAccountDetails(account.AccountId, account.CustomerId).ConfigureAwait(false);
+
+            if (accountDetails.CustomerId > 0 && accountDetails.AccountId > 0 && accountDetails.Balance == 0)
+            {
+                var mappedCloseAccountModel = new Repositories.Models.CloseAccount()
+                {
+                    AccountId = account.AccountId,
+                    CustomerId = accountDetails.CustomerId
+                };
+                accountDetails = await _bankAccountRepository.CloseCustomerAccount(mappedCloseAccountModel).ConfigureAwait(false);
+                success = true;
+            }
+
+            CloseAccountResult result = new CloseAccountResult()
+            {
+                AccountId = success ? accountDetails.AccountId : 0,
+                CustomerId = success ? accountDetails.CustomerId : 0,
+                Succeeded = success
+            };
+
+            return result;
+        }
     }
 }

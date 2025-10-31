@@ -59,10 +59,17 @@ namespace Banky.API.Controllers
             return result.Succeeded ? Ok(result) : BadRequest(result);
         }
 
-        [HttpPost]
-        public async Task<IActionResult> CloseAccount()
+        [HttpPut("close-account")]
+        [ProducesResponseType(typeof(CloseAccountResult), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> CloseAccount([FromBody] CloseAccount account)
         {
-            return Ok();
+            if (account == null)
+            {
+                return BadRequest("Missing account information");
+            }
+            var result = await _accountService.CloseAccount(account).ConfigureAwait(false);
+            return result.Succeeded ? Ok(result) : BadRequest(result);
         }
     }
 }

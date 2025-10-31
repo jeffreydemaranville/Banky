@@ -13,5 +13,6 @@ namespace Banky.Services.Interfaces
         Task<IAccountTransactionResult> DepositFunds(AccountDeposit deposit);
         Task<IAccountTransactionResult> WithdrawFunds(AccountWithdrawal withdrawal);
         Task<ICreateAccountResult> CreateAccount(CreateAccount account);
+        Task<ICloseAccountResult> CloseAccount(CloseAccount account);
     }
 }

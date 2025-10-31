@@ -63,5 +63,12 @@ namespace Banky.Repositories
             _accountDetailModels.Add(accountDetail);
             return accountDetail;
         }
+
+        public async Task<AccountDetail> CloseCustomerAccount(CloseAccount account)
+        {
+            _accountDetailModels.Find(x => x.CustomerId == account.CustomerId && x.AccountId == account.AccountId).AccountStatusId = 0;
+            var accountDetails = _accountDetailModels.Find(x => x.CustomerId == account.CustomerId && x.AccountId == account.AccountId);
+            return accountDetails;
+        }
     }
 }
