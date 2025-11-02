@@ -18,9 +18,9 @@ namespace Banky.API.Controllers
         }
 
         [HttpPost("deposit")]
-        [ProducesResponseType(typeof(AccountDepositResult), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(CustomerTransactionResult), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> SubmitDeposit([FromBody] AccountDeposit deposit)
+        public async Task<IActionResult> SubmitDeposit([FromBody] CustomerTransaction deposit)
         {
             if (deposit == null)
             {
@@ -32,9 +32,9 @@ namespace Banky.API.Controllers
         }
 
         [HttpPost("withdraw")]
-        [ProducesResponseType(typeof(AccountWithdrawalResult), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(CustomerTransactionResult), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> SubmitWithdrawal([FromBody] AccountWithdrawal withdrawal)
+        public async Task<IActionResult> SubmitWithdrawal([FromBody] CustomerTransaction withdrawal)
         {
             if (withdrawal == null)
             {
@@ -46,9 +46,9 @@ namespace Banky.API.Controllers
         }
 
         [HttpPost("create-account")]
-        [ProducesResponseType(typeof(CreateAccountResult), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(CreateCustomerAccountResult), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> CreateAccount([FromBody] CreateAccount account)
+        public async Task<IActionResult> CreateAccount([FromBody] CreateCustomerAccount account)
         {
             if (account == null)
             {
@@ -60,9 +60,9 @@ namespace Banky.API.Controllers
         }
 
         [HttpPut("close-account")]
-        [ProducesResponseType(typeof(CloseAccountResult), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(CustomerAccountResult), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> CloseAccount([FromBody] CloseAccount account)
+        public async Task<IActionResult> CloseAccount([FromBody] CustomerAccount account)
         {
             if (account == null)
             {

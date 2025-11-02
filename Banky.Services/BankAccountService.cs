@@ -2,7 +2,7 @@
 using Banky.Repositories.Models;
 using Banky.Services.Interfaces;
 using Banky.Services.Models;
-using Banky.Shared.Interfaces;
+using Banky.Shared.Enumerations;
 
 namespace Banky.Services
 {
@@ -15,7 +15,7 @@ namespace Banky.Services
             _bankAccountRepository = bankAccountRepository;
         }
 
-        public async Task<IAccountTransactionResult> DepositFunds(AccountDeposit deposit)
+        public async Task<CustomerTransactionResult> DepositFunds(CustomerTransaction deposit)
         {
             var accountDetails = await _bankAccountRepository.GetAccountDetails(deposit.AccountId, deposit.CustomerId).ConfigureAwait(false);
             var success = false;
@@ -25,7 +25,7 @@ namespace Banky.Services
                 success = true;
             }
 
-            var result = new AccountDepositResult()
+            var result = new CustomerTransactionResult()
             {
                 AccountId = success ? accountDetails.AccountId : 0,
                 Balance = success ? accountDetails.Balance : 0,
@@ -35,7 +35,7 @@ namespace Banky.Services
             return result;
         }
 
-        public async Task<IAccountTransactionResult> WithdrawFunds(AccountWithdrawal withdrawal)
+        public async Task<CustomerTransactionResult> WithdrawFunds(CustomerTransaction withdrawal)
         {
             var accountDetails = await _bankAccountRepository.GetAccountDetails(withdrawal.AccountId, withdrawal.CustomerId).ConfigureAwait(false);
             var success = false;
@@ -45,7 +45,7 @@ namespace Banky.Services
                 success = true;
             }
 
-            var result = new AccountWithdrawalResult()
+            var result = new CustomerTransactionResult()
             {
                 AccountId = success ? accountDetails.AccountId : 0,
                 Balance = success ? accountDetails.Balance : 0,
@@ -55,16 +55,15 @@ namespace Banky.Services
             return result;
         }
 
-        public async Task<ICreateAccountResult> CreateAccount(Models.CreateAccount account)
+        public async Task<CreateCustomerAccountResult> CreateAccount(CreateCustomerAccount account)
         {
-            var success = false;
-            var accountDetail = new AccountDetail();
+            var accountDetail = new CreateCustomerAccountResult();
             var customerDetails = await _bankAccountRepository.GetCustomerDetails(account.CustomerId).ConfigureAwait(false);
 
             if (customerDetails.CustomerId > 0 && account.InitialDeposit >= 100 && account.AccountTypeId > 0)
             {
                 var isFirstAccount = customerDetails.CustomerAccounts?.Count() == 0;
-                if (!isFirstAccount || (isFirstAccount && account.AccountTypeId == Shared.Enumerations.AccountTypeEnum.Savings))
+                if (!isFirstAccount || (isFirstAccount && account.AccountTypeId == ((short)AccountTypeEnum.Savings)))
                 {
                     var newAccount = new Repositories.Models.CreateAccount()
                     {
@@ -72,23 +71,30 @@ namespace Banky.Services
                         CustomerId = account.CustomerId,
                         InitialDeposit = account.InitialDeposit,
                     };
-                    accountDetail = await _bankAccountRepository.CreateCustomerAccount(newAccount);
-                    success = true;
+                    var createResult = await _bankAccountRepository.CreateCustomerAccount(account);
+                    accountDetail = new CreateCustomerAccountResult()
+                    {
+                        AccountId = createResult.AccountId,
+                        CustomerId = createResult.CustomerId,
+                        AccountTypeId = (short)account.AccountTypeId,
+                        Balance = createResult.Balance,
+                        Succeeded = true
+                    };
                 }
             }
 
-            var result = new CreateAccountResult()
-            {
-                AccountId = accountDetail.AccountId,
-                AccountTypeId = accountDetail.AccountTypeId,
-                Balance = accountDetail.Balance,
-                CustomerId = accountDetail.CustomerId,
-                Succeeded = success
-            };
-            return result;
+            //var result = new CreateCustomerAccountResult()
+            //{
+            //    AccountId = accountDetail.AccountId,
+            //    AccountTypeId = accountDetail.AccountTypeId,
+            //    Balance = accountDetail.InitialDeposit,
+            //    CustomerId = accountDetail.CustomerId,
+            //    Succeeded = success
+            //};
+            return accountDetail;
         }
 
-        public async Task<ICloseAccountResult> CloseAccount(Models.CloseAccount account)
+        public async Task<CustomerAccountResult> CloseAccount(CustomerAccount account)
         {
             var success = false;
             var accountDetails = await _bankAccountRepository.GetAccountDetails(account.AccountId, account.CustomerId).ConfigureAwait(false);
@@ -104,7 +110,7 @@ namespace Banky.Services
                 success = true;
             }
 
-            CloseAccountResult result = new CloseAccountResult()
+            var result = new CustomerAccountResult()
             {
                 AccountId = success ? accountDetails.AccountId : 0,
                 CustomerId = success ? accountDetails.CustomerId : 0,
