@@ -10,6 +10,6 @@ namespace Banky.Repositories.Interfaces
         Task<ICustomerAccountDetail> DepositFunds(ICustomerAccountDetail account, double amount);
         Task<ICustomerAccountDetail> WithdrawFunds(ICustomerAccountDetail account, double amount);
         Task<ICustomerAccountDetail> CreateCustomerAccount(ICreateCustomerAccount account);
-        Task<ICustomerAccountDetail> CloseCustomerAccount(CloseAccount account);
+        Task<ICustomerAccountDetail> CloseCustomerAccount(ICustomerAccount account);
     }
 }

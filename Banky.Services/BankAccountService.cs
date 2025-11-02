@@ -59,18 +59,12 @@ namespace Banky.Services
         {
             var accountDetail = new CreateCustomerAccountResult();
             var customerDetails = await _bankAccountRepository.GetCustomerDetails(account.CustomerId).ConfigureAwait(false);
+            var isFirstAccount = customerDetails.CustomerAccounts?.Count() == 0;
 
             if (customerDetails.CustomerId > 0 && account.InitialDeposit >= 100 && account.AccountTypeId > 0)
             {
-                var isFirstAccount = customerDetails.CustomerAccounts?.Count() == 0;
                 if (!isFirstAccount || (isFirstAccount && account.AccountTypeId == ((short)AccountTypeEnum.Savings)))
                 {
-                    var newAccount = new Repositories.Models.CreateAccount()
-                    {
-                        AccountTypeId = (short)account.AccountTypeId,
-                        CustomerId = account.CustomerId,
-                        InitialDeposit = account.InitialDeposit,
-                    };
                     var createResult = await _bankAccountRepository.CreateCustomerAccount(account);
                     accountDetail = new CreateCustomerAccountResult()
                     {
@@ -83,14 +77,6 @@ namespace Banky.Services
                 }
             }
 
-            //var result = new CreateCustomerAccountResult()
-            //{
-            //    AccountId = accountDetail.AccountId,
-            //    AccountTypeId = accountDetail.AccountTypeId,
-            //    Balance = accountDetail.InitialDeposit,
-            //    CustomerId = accountDetail.CustomerId,
-            //    Succeeded = success
-            //};
             return accountDetail;
         }
 
@@ -101,12 +87,7 @@ namespace Banky.Services
 
             if (accountDetails.CustomerId > 0 && accountDetails.AccountId > 0 && accountDetails.Balance == 0)
             {
-                var mappedCloseAccountModel = new Repositories.Models.CloseAccount()
-                {
-                    AccountId = account.AccountId,
-                    CustomerId = accountDetails.CustomerId
-                };
-                accountDetails = await _bankAccountRepository.CloseCustomerAccount(mappedCloseAccountModel).ConfigureAwait(false);
+                accountDetails = await _bankAccountRepository.CloseCustomerAccount(account).ConfigureAwait(false);
                 success = true;
             }
 

@@ -51,7 +51,7 @@ namespace Banky.Repositories
             CustomerAccountDetail accountDetail = new CustomerAccountDetail()
             {
                 AccountId = _accountDetailModels.Max(x => x.AccountId + 1000),
-                AccountStatusId = 1,
+                AccountStatusId = 2,
                 AccountTypeId = account.AccountTypeId,
                 Balance = account.InitialDeposit,
                 CustomerId = account.CustomerId
@@ -60,9 +60,9 @@ namespace Banky.Repositories
             return accountDetail;
         }
 
-        public async Task<ICustomerAccountDetail> CloseCustomerAccount(CloseAccount account)
+        public async Task<ICustomerAccountDetail> CloseCustomerAccount(ICustomerAccount account)
         {
-            _accountDetailModels.Find(x => x.CustomerId == account.CustomerId && x.AccountId == account.AccountId).AccountStatusId = 0;
+            _accountDetailModels.Find(x => x.CustomerId == account.CustomerId && x.AccountId == account.AccountId).AccountStatusId = 1;
             var accountDetails = _accountDetailModels.Find(x => x.CustomerId == account.CustomerId && x.AccountId == account.AccountId);
             return accountDetails;
         }
