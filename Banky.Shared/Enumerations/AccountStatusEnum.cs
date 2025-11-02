@@ -2,7 +2,7 @@
 {
     public enum AccountStatusEnum : short
     {
-        Closed = 0,
-        Open = 1,
+        Closed = 1,
+        Open = 2,
     }
 }

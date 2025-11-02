@@ -6,4 +6,8 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Banky.Shared\Banky.Shared.csproj" />
+  </ItemGroup>
+
 </Project>

@@ -1,9 +1,7 @@
-﻿namespace Banky.Repositories.Models
+﻿namespace Banky.Shared.Interfaces
 {
-    public class AccountDetail
+    public interface ICustomerAccountDetail : ICustomerAccount
     {
-        public int CustomerId { get; set; }
-        public int AccountId { get; set; }
         public short AccountTypeId { get; set; }
         public short AccountStatusId { get; set; }
         public double Balance { get; set; }

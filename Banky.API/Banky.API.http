@@ -1,6 +1,6 @@
 @Banky.API_HostAddress = http://localhost:5174
 
-GET {{Banky.API_HostAddress}}/weatherforecast/
+GET {{Banky.API_HostAddress}}/bankaccount/
 Accept: application/json
 
 ###

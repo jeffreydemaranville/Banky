@@ -1,6 +1,6 @@
-﻿namespace Banky.Repositories.Models
+﻿namespace Banky.Shared.Interfaces
 {
-    public class CloseAccount
+    public interface ICustomerAccount // Base
     {
         public int CustomerId { get; set; }
         public int AccountId { get; set; }
